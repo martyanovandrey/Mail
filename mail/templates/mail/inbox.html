@@ -4,7 +4,7 @@
 {% block body %}
     <h2>{{ request.user.email }}</h2>
 
-    <button class="btn btn-sm btn-outline-primary" id="inbox">Inbox</button>
+    <button onclick='load_mailbox()' class="btn btn-sm btn-outline-primary" id="inbox">Inbox</button>
     <button class="btn btn-sm btn-outline-primary" id="compose">Compose</button>
     <button class="btn btn-sm btn-outline-primary" id="sent">Sent</button>
     <button class="btn btn-sm btn-outline-primary" id="archived">Archived</button>
@@ -12,11 +12,13 @@
     <hr>
 
     <div id="emails-view">
+        <h1>fwdwd</h1>
     </div>
 
     <div id="compose-view">
         <h3>New Email</h3>
         <form id="compose-form">
+
             <div class="form-group">
                 From: <input disabled class="form-control" value="{{ request.user.email }}">
             </div>
@@ -27,7 +29,7 @@
                 <input class="form-control" id="compose-subject" placeholder="Subject">
             </div>
             <textarea class="form-control" id="compose-body" placeholder="Body"></textarea>
-            <input type="submit" class="btn btn-primary"/>
+            <input onclick='sent_email()' type="submit" class="btn btn-primary"/>
         </form>
     </div>
 {% endblock %}
