@@ -6,9 +6,9 @@ document.addEventListener('DOMContentLoaded', function () {
 	document.querySelector('#archived').addEventListener('click', () => load_mailbox('archive'));
 	document.querySelector('#compose').addEventListener('click', compose_email);
 	document.querySelectorAll('#mail')
-		.forEach((item) => {
-			item.addEventListener('click', () => {
-				load_email(item.id);
+		.forEach((button) => {
+			button.addEventListener('click', () => {
+			  console.log("forEach worked");
 			});
 		  });
 
