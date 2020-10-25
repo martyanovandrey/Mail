@@ -2,17 +2,22 @@ textarea {
     min-height: 400px;
 }
 
-table.mail-table {
+.mail-read {
     width:  100%; /* Ширина таблицы */
-    border-spacing: 0 px; /* Расстояние между ячейками */
     border: 1px solid black;
+    margin: 2px;
+    display: inline-block;
+
 }
 
-td {
-    width:  33%;
-    padding: 5px;
-  }
+.mail-unread {
+    background-color:lightgray;
+    width:  100%; /* Ширина таблицы */
+    border: 1px solid black;
+    margin: 2px;
+    display: inline-block;
+}
 
-.right-td {
-    text-align:right;
+.right {
+    float:right
 }
