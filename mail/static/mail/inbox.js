@@ -30,15 +30,33 @@ function load_mailbox(mailbox) {
   document.querySelector('#compose-view').style.display = 'none';
 
   // Show the mailbox name
-  //document.querySelector('#emails-view').innerHTML = `<h3>${mailbox.charAt(0).toUpperCase() + mailbox.slice(1)}</h3>`;
-  test = fetch('emails/1').then((response) => {
-    return response.json();
-  })
-  .then((data) => {
-    console.log(data);
-  });
-  document.querySelector('#emails-view').innerHTML = test
-}
+  document.querySelector('#emails-view').innerHTML = `<h3>${mailbox.charAt(0).toUpperCase() + mailbox.slice(1)}</h3>`;
+  fetch('/emails/inbox')
+  .then(response => response.json())
+  .then(emails => {
+      // Print emails
+      console.log(emails);
+      emails.forEach(add_mail);
+    });
+  }
+  
+  function add_mail(object) {
+    const mail = document.createElement('table');
+    mail.className = 'mail-table'
+    mail.innerHTML = `
+        <tr>
+          <td>${object.sender}</td> 
+          <td>${object.subject}</td>
+          <td class='right-td'>${object.timestamp}</td>
+        </tr>`
+    document.querySelector('#emails-view').append(mail)
+  }
+
+
+  
+
+
+
 
 function sent_email() {
   fetch('/emails', {
