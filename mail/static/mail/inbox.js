@@ -5,17 +5,8 @@ document.addEventListener('DOMContentLoaded', function () {
 	document.querySelector('#sent').addEventListener('click', () => load_mailbox('sent'));
 	document.querySelector('#archived').addEventListener('click', () => load_mailbox('archive'));
 	document.querySelector('#compose').addEventListener('click', compose_email);
-	document.querySelectorAll('#mail')
-		.forEach((button) => {
-			button.addEventListener('click', () => {
-			  console.log("forEach worked");
-			});
-		  });
 
-
-
-
-
+	//End of first listener
 	});		
 
 function compose_email() {
@@ -48,19 +39,26 @@ function load_mailbox(mailbox) {
 }
 
 function add_emails(object) {
-	const mail = document.createElement('table');
+	const mail = document.createElement('div');
+	mail.id = 'mail'
+	// Create data-id with mail id
+	mail.dataset.mailid = object.id
 	if (object.read) {
 		mail.className = 'mail-read'
 	} else {
 		mail.className = 'mail-unread'
 	}
 	mail.innerHTML =
-		`<div id='mail' data-id=${object.id}>
-          <span>${object.sender}</span> 
-          <span>${object.subject}</span>
-          <span class='right'>${object.timestamp}</span>
-      </div>`
+		`<span>${object.sender}</span> 
+         <span>${object.subject}</span>
+         <span class='right'>${object.timestamp}</span>`
 	document.querySelector('#emails-view').append(mail)
+	document.querySelectorAll('#mail')
+	.forEach((button) => {
+		button.addEventListener('click', () => {
+		  console.log("forEach worked");
+		});
+	  });
 }
 
 function sent_email() {
