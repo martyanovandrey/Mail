@@ -14,6 +14,8 @@ function compose_email() {
 	// Show compose view and hide other views
 	document.querySelector('#emails-view').style.display = 'none';
 	document.querySelector('#compose-view').style.display = 'block';
+	document.querySelector('#mail-view').style.display = 'none';
+	
 
 	// Clear out composition fields
 	document.querySelector('#compose-recipients').value = '';
@@ -26,6 +28,7 @@ function load_mailbox(mailbox) {
 	// Show the mailbox and hide other views
 	document.querySelector('#emails-view').style.display = 'block';
 	document.querySelector('#compose-view').style.display = 'none';
+	document.querySelector('#mail-view').style.display = 'none';
 
 	// Show the mailbox name
 	document.querySelector('#emails-view').innerHTML = `<h3>${mailbox.charAt(0).toUpperCase() + mailbox.slice(1)}</h3>`;
@@ -43,22 +46,30 @@ function add_emails(object) {
 	mail.id = 'mail'
 	// Create data-id with mail id
 	mail.dataset.mailid = object.id
+	mail.onclick = function () {
+		fetch(`/emails/${this.dataset.mailid}`)
+		.then(response => response.json())
+		.then(email => {
+			// Print email
+			console.log(email);
+			document.querySelector('#emails-view').style.display = 'none';
+			document.querySelector('#compose-view').style.display = 'none';
+			document.querySelector('#mail-view').style.display = 'block';
+			// ... do something else with email ...
+		});
+	};
+	
 	if (object.read) {
 		mail.className = 'mail-read'
 	} else {
 		mail.className = 'mail-unread'
 	}
 	mail.innerHTML =
-		`<span>${object.sender}</span> 
-         <span>${object.subject}</span>
-         <span class='right'>${object.timestamp}</span>`
+	`<span>${object.sender}</span> 
+	<span>${object.subject}</span>
+	<span class='right'>${object.timestamp}</span>`
 	document.querySelector('#emails-view').append(mail)
-	document.querySelectorAll('#mail')
-	.forEach((button) => {
-		button.addEventListener('click', () => {
-		  console.log("forEach worked");
-		});
-	  });
+	
 }
 
 function sent_email() {
