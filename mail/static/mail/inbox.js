@@ -46,6 +46,17 @@ function add_emails(object) {
 	mail.id = 'mail'
 	// Create data-id with mail id
 	mail.dataset.mailid = object.id
+	
+	/* Another way to add listen function
+
+	const element = document.createElement('div');
+	element.innerHTML = 'This is the content of the div.';
+	element.addEventListener('click', function() {
+		console.log('This element has been clicked!')
+	});
+	document.querySelector('#emails-view').append(element);
+	*/
+
 	mail.onclick = function () {
 		fetch(`/emails/${this.dataset.mailid}`)
 		.then(response => response.json())
@@ -55,7 +66,15 @@ function add_emails(object) {
 			document.querySelector('#emails-view').style.display = 'none';
 			document.querySelector('#compose-view').style.display = 'none';
 			document.querySelector('#mail-view').style.display = 'block';
-			// ... do something else with email ...
+			document.querySelector('#mail-view').innerHTML = `
+			<p><strong>From: </strong> ${email.sender}</p>
+			<p><strong>To: </strong>${email.recipients}</p>
+			<p><strong>Subject: </strong>${email.subject}</p>
+			<p><strong>Timestamp: </strong>${email.timestamp}</p>
+			<button class="btn btn-sm btn-outline-primary" id="reply">Reply</button>
+			<hr>
+			<p>${email.body}</p>
+			`;
 		});
 	};
 	
@@ -95,6 +114,6 @@ function load_email(id) {
 			// Print email
 			console.log(email);
 
-			// ... do something else with email ...
+
 		});
 }
