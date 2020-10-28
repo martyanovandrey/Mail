@@ -7,7 +7,7 @@ document.addEventListener('DOMContentLoaded', function () {
 	document.querySelector('#compose').addEventListener('click', compose_email);
 
 	//End of first listener
-	});		
+});
 
 function compose_email() {
 
@@ -15,7 +15,7 @@ function compose_email() {
 	document.querySelector('#emails-view').style.display = 'none';
 	document.querySelector('#compose-view').style.display = 'block';
 	document.querySelector('#mail-view').style.display = 'none';
-	
+
 
 	// Clear out composition fields
 	document.querySelector('#compose-recipients').value = '';
@@ -46,7 +46,7 @@ function add_emails(object) {
 	mail.id = 'mail'
 	// Create data-id with mail id
 	mail.dataset.mailid = object.id
-	
+
 	/* Another way to add listen function
 
 	const element = document.createElement('div');
@@ -58,15 +58,21 @@ function add_emails(object) {
 	*/
 
 	mail.onclick = function () {
+		fetch(`/emails/${this.dataset.mailid}`, {
+			method: 'PUT',
+			body: JSON.stringify({
+				read: true
+			})
+		})
 		fetch(`/emails/${this.dataset.mailid}`)
-		.then(response => response.json())
-		.then(email => {
-			// Print email
-			console.log(email);
-			document.querySelector('#emails-view').style.display = 'none';
-			document.querySelector('#compose-view').style.display = 'none';
-			document.querySelector('#mail-view').style.display = 'block';
-			document.querySelector('#mail-view').innerHTML = `
+			.then(response => response.json())
+			.then(email => {
+				// Print email
+				console.log(email);
+				document.querySelector('#emails-view').style.display = 'none';
+				document.querySelector('#compose-view').style.display = 'none';
+				document.querySelector('#mail-view').style.display = 'block';
+				document.querySelector('#mail-view').innerHTML = `
 			<p><strong>From: </strong> ${email.sender}</p>
 			<p><strong>To: </strong>${email.recipients}</p>
 			<p><strong>Subject: </strong>${email.subject}</p>
@@ -75,20 +81,40 @@ function add_emails(object) {
 			<hr>
 			<p>${email.body}</p>
 			`;
-		});
+			});
+		if (mail.archived == True) {
+			document.querySelector('#mail-view').innerHTML = `
+			<button class="btn btn-sm btn-outline-primary" id="archive">Archive</button>`
+			fetch(`/emails/${this.dataset.mailid}`, {
+				method: 'PUT',
+				body: JSON.stringify({
+					archived: false
+				})
+			})
+		} else {
+			document.querySelector('#mail-view').innerHTML = `
+			<button class="btn btn-sm btn-outline-primary" id="unarchive">Unarchive</button>`
+			fetch(`/emails/${this.dataset.mailid}`, {
+					method: 'PUT',
+					body: JSON.stringify({
+						archived: true
+					})
+				}
+			}
+		};
 	};
-	
+
 	if (object.read) {
 		mail.className = 'mail-read'
 	} else {
 		mail.className = 'mail-unread'
 	}
 	mail.innerHTML =
-	`<span>${object.sender}</span> 
+		`<span>${object.sender}</span> 
 	<span>${object.subject}</span>
 	<span class='right'>${object.timestamp}</span>`
 	document.querySelector('#emails-view').append(mail)
-	
+
 }
 
 function sent_email() {
