@@ -46,7 +46,6 @@ function add_emails(object) {
 	mail.id = 'mail'
 	// Create data-id with mail id
 	mail.dataset.mailid = object.id
-
 	/* Another way to add listen function
 
 	const element = document.createElement('div');
@@ -56,6 +55,16 @@ function add_emails(object) {
 	});
 	document.querySelector('#emails-view').append(element);
 	*/
+	if (object.read) {
+		mail.className = 'mail-read'
+	} else {
+		mail.className = 'mail-unread'
+	}
+	mail.innerHTML =
+		`<span>${object.sender}</span> 
+		<span>${object.subject}</span>
+		<span class='right'>${object.timestamp}</span>`
+	document.querySelector('#emails-view').append(mail)
 
 	mail.onclick = function () {
 		fetch(`/emails/${this.dataset.mailid}`, {
@@ -73,49 +82,45 @@ function add_emails(object) {
 				document.querySelector('#compose-view').style.display = 'none';
 				document.querySelector('#mail-view').style.display = 'block';
 				document.querySelector('#mail-view').innerHTML = `
-			<p><strong>From: </strong> ${email.sender}</p>
-			<p><strong>To: </strong>${email.recipients}</p>
-			<p><strong>Subject: </strong>${email.subject}</p>
-			<p><strong>Timestamp: </strong>${email.timestamp}</p>
-			<button class="btn btn-sm btn-outline-primary" id="reply">Reply</button>
-			<hr>
-			<p>${email.body}</p>
+					<p><strong>From: </strong> ${email.sender}</p>
+					<p><strong>To: </strong>${email.recipients}</p>
+					<p><strong>Subject: </strong>${email.subject}</p>
+					<p><strong>Timestamp: </strong>${email.timestamp}</p>
+					<button class="btn btn-sm btn-outline-primary" id="reply">Reply</button>
+					<button class="btn btn-sm btn-outline-primary" id="archive"></button>
+					<hr>
+					<p>${email.body}</p>
 			`;
-			});
-		if (mail.archived == True) {
-			document.querySelector('#mail-view').innerHTML = `
-			<button class="btn btn-sm btn-outline-primary" id="archive">Archive</button>`
-			fetch(`/emails/${this.dataset.mailid}`, {
-				method: 'PUT',
-				body: JSON.stringify({
-					archived: false
-				})
-			})
-		} else {
-			document.querySelector('#mail-view').innerHTML = `
-			<button class="btn btn-sm btn-outline-primary" id="unarchive">Unarchive</button>`
-			fetch(`/emails/${this.dataset.mailid}`, {
-					method: 'PUT',
-					body: JSON.stringify({
-						archived: true
+			if (email.archived === true) {
+				document.getElementById('archive').innerHTML = `Unarchve`
+				document.getElementById('archive').addEventListener('click', () => 
+				{
+					fetch(`/emails/${this.dataset.mailid}`, {
+						method: 'PUT',
+						body: JSON.stringify({
+							archived: false
+						})
+					})	
+				load_mailbox('inbox')
+				});
+			} else {
+				document.getElementById('archive').innerHTML = `Archive`
+				document.getElementById('archive').addEventListener('click', () => 
+				{
+					fetch(`/emails/${this.dataset.mailid}`, {
+						method: 'PUT',
+						body: JSON.stringify({
+							archived: true
+						})
 					})
-				}
-			}
-		};
-	};
+				load_mailbox('inbox')
+				});
+			};
+			});
 
-	if (object.read) {
-		mail.className = 'mail-read'
-	} else {
-		mail.className = 'mail-unread'
+
 	}
-	mail.innerHTML =
-		`<span>${object.sender}</span> 
-	<span>${object.subject}</span>
-	<span class='right'>${object.timestamp}</span>`
-	document.querySelector('#emails-view').append(mail)
-
-}
+};
 
 function sent_email() {
 	fetch('/emails', {
@@ -142,4 +147,4 @@ function load_email(id) {
 
 
 		});
-}
+};
