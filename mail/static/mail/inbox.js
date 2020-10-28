@@ -7,7 +7,7 @@ document.addEventListener('DOMContentLoaded', function () {
 	document.querySelector('#compose').addEventListener('click', compose_email);
 
 	//End of first listener
-	});		
+});
 
 function compose_email() {
 
@@ -15,7 +15,7 @@ function compose_email() {
 	document.querySelector('#emails-view').style.display = 'none';
 	document.querySelector('#compose-view').style.display = 'block';
 	document.querySelector('#mail-view').style.display = 'none';
-	
+
 
 	// Clear out composition fields
 	document.querySelector('#compose-recipients').value = '';
@@ -46,7 +46,6 @@ function add_emails(object) {
 	mail.id = 'mail'
 	// Create data-id with mail id
 	mail.dataset.mailid = object.id
-	
 	/* Another way to add listen function
 
 	const element = document.createElement('div');
@@ -56,40 +55,72 @@ function add_emails(object) {
 	});
 	document.querySelector('#emails-view').append(element);
 	*/
-
-	mail.onclick = function () {
-		fetch(`/emails/${this.dataset.mailid}`)
-		.then(response => response.json())
-		.then(email => {
-			// Print email
-			console.log(email);
-			document.querySelector('#emails-view').style.display = 'none';
-			document.querySelector('#compose-view').style.display = 'none';
-			document.querySelector('#mail-view').style.display = 'block';
-			document.querySelector('#mail-view').innerHTML = `
-			<p><strong>From: </strong> ${email.sender}</p>
-			<p><strong>To: </strong>${email.recipients}</p>
-			<p><strong>Subject: </strong>${email.subject}</p>
-			<p><strong>Timestamp: </strong>${email.timestamp}</p>
-			<button class="btn btn-sm btn-outline-primary" id="reply">Reply</button>
-			<hr>
-			<p>${email.body}</p>
-			`;
-		});
-	};
-	
 	if (object.read) {
 		mail.className = 'mail-read'
 	} else {
 		mail.className = 'mail-unread'
 	}
 	mail.innerHTML =
-	`<span>${object.sender}</span> 
-	<span>${object.subject}</span>
-	<span class='right'>${object.timestamp}</span>`
+		`<span>${object.sender}</span> 
+		<span>${object.subject}</span>
+		<span class='right'>${object.timestamp}</span>`
 	document.querySelector('#emails-view').append(mail)
-	
-}
+
+	mail.onclick = function () {
+		fetch(`/emails/${this.dataset.mailid}`, {
+			method: 'PUT',
+			body: JSON.stringify({
+				read: true
+			})
+		})
+		fetch(`/emails/${this.dataset.mailid}`)
+			.then(response => response.json())
+			.then(email => {
+				// Print email
+				console.log(email);
+				document.querySelector('#emails-view').style.display = 'none';
+				document.querySelector('#compose-view').style.display = 'none';
+				document.querySelector('#mail-view').style.display = 'block';
+				document.querySelector('#mail-view').innerHTML = `
+					<p><strong>From: </strong> ${email.sender}</p>
+					<p><strong>To: </strong>${email.recipients}</p>
+					<p><strong>Subject: </strong>${email.subject}</p>
+					<p><strong>Timestamp: </strong>${email.timestamp}</p>
+					<button class="btn btn-sm btn-outline-primary" id="reply">Reply</button>
+					<button class="btn btn-sm btn-outline-primary" id="archive"></button>
+					<hr>
+					<p>${email.body}</p>
+			`;
+			if (email.archived === true) {
+				document.getElementById('archive').innerHTML = `Unarchve`
+				document.getElementById('archive').addEventListener('click', () => 
+				{
+					fetch(`/emails/${this.dataset.mailid}`, {
+						method: 'PUT',
+						body: JSON.stringify({
+							archived: false
+						})
+					})	
+				load_mailbox('inbox')
+				});
+			} else {
+				document.getElementById('archive').innerHTML = `Archive`
+				document.getElementById('archive').addEventListener('click', () => 
+				{
+					fetch(`/emails/${this.dataset.mailid}`, {
+						method: 'PUT',
+						body: JSON.stringify({
+							archived: true
+						})
+					})
+				load_mailbox('inbox')
+				});
+			};
+			});
+
+
+	}
+};
 
 function sent_email() {
 	fetch('/emails', {
@@ -116,4 +147,4 @@ function load_email(id) {
 
 
 		});
-}
+};
