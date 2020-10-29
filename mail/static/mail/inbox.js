@@ -87,10 +87,11 @@ function add_emails(object) {
 					<p><strong>Subject: </strong>${email.subject}</p>
 					<p><strong>Timestamp: </strong>${email.timestamp}</p>
 					<button class="btn btn-sm btn-outline-primary" id="reply">Reply</button>
-					<button class="btn btn-sm btn-outline-primary" id="archive"></button>
+					<button onclick=archive() class="btn btn-sm btn-outline-primary" id="archive"></button>
 					<hr>
 					<p>${email.body}</p>
 			`;
+			// Archive mail
 			if (email.archived === true) {
 				document.getElementById('archive').innerHTML = `Unarchve`
 				document.getElementById('archive').addEventListener('click', () => 
@@ -116,10 +117,22 @@ function add_emails(object) {
 				load_mailbox('inbox')
 				});
 			};
+			document.getElementById('reply').addEventListener('click', () => 
+				{ compose_email() 
+					document.querySelector('#compose-recipients').value = `${email.recipients}`;
+					console.log(email.subject.slice(0, 3));
+					if (email.subject.slice(0, 2) === 'Re:') {
+						document.querySelector('#compose-subject').value = `${email.subject}`;
+					} else {
+						document.querySelector('#compose-subject').value = `Re: ${email.subject}`;
+					}
+					document.querySelector('#compose-body').value = `On ${email.timestamp} ${email.recipients} wrote: \n${email.body}`;
 			});
-
-
+			// End archive mail
+			});
+			// End fetch
 	}
+	// End mail load
 };
 
 function sent_email() {
