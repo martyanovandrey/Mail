@@ -120,8 +120,7 @@ function add_emails(object) {
 			document.getElementById('reply').addEventListener('click', () => 
 				{ compose_email() 
 					document.querySelector('#compose-recipients').value = `${email.recipients}`;
-					console.log(email.subject.slice(0, 3));
-					if (email.subject.slice(0, 2) === 'Re:') {
+					if (email.subject.slice(0, 3) === 'Re:') {
 						document.querySelector('#compose-subject').value = `${email.subject}`;
 					} else {
 						document.querySelector('#compose-subject').value = `Re: ${email.subject}`;
