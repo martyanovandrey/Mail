@@ -97,7 +97,7 @@ def mailbox(request, mailbox):
 
 
 @csrf_exempt
-@login_required
+@login_required(login_url='/accounts/login/')
 def email(request, email_id):
 
     # Query for requested email

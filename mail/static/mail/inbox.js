@@ -47,7 +47,7 @@ function add_emails(object) {
 	// Create data-id with mail id
 	mail.dataset.mailid = object.id
 	/* Another way to add listen function
-
+	
 	const element = document.createElement('div');
 	element.innerHTML = 'This is the content of the div.';
 	element.addEventListener('click', function() {
@@ -61,11 +61,12 @@ function add_emails(object) {
 		mail.className = 'mail-unread'
 	}
 	mail.innerHTML =
-		`<span>${object.sender}</span> 
-		<span>${object.subject}</span>
-		<span class='right'>${object.timestamp}</span>`
+	`<span>${object.sender}</span> 
+	<span>${object.subject}</span>
+	<span class='right'>${object.timestamp}</span>`
 	document.querySelector('#emails-view').append(mail)
-
+	
+	console.log('add_emails')
 	mail.onclick = function () {
 		fetch(`/emails/${this.dataset.mailid}`, {
 			method: 'PUT',
