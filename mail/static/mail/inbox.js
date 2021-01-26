@@ -102,8 +102,7 @@ function add_emails(object) {
 						body: JSON.stringify({
 							archived: false
 						})
-					})	
-				load_mailbox('inbox')
+					}).then(() => load_mailbox('inbox'))	
 				});
 			} else {
 				document.getElementById('archive').innerHTML = `Archive`
@@ -114,9 +113,9 @@ function add_emails(object) {
 						body: JSON.stringify({
 							archived: true
 						})
-					})
-				load_mailbox('inbox')
+					}).then(() => load_mailbox('inbox'))
 				});
+			
 			};
 			document.getElementById('reply').addEventListener('click', () => 
 				{ compose_email() 
