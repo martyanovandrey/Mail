@@ -34,4 +34,3 @@ Using JavaScript, HTML, and CSS, complete the implementation of your single-page
   ___
   [Live demo](https://youtu.be/8sQL5P44LCM)
   
-  [![IMAGE ALT TEXT HERE](http://img.youtube.com/vi/8sQL5P44LCM/0.jpg)](http://www.youtube.com/watch?v=8sQL5P44LCM)
